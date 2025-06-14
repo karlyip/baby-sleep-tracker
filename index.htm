@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baby Sleep Tracker</title>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    label { display: block; margin-top: .5rem; }
+    button { margin-top: 1rem; }
+    .output { margin-top: 1rem; }
+    #error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>楓楓瞓覺計數機</h1>
+  <form id="sleep-form">
+    <label>瞓醒時間：
+      <input type="datetime-local" id="wake-time" required>
+    </label>
+    <label>Awake window：
+      <select id="awake-window">
+        <option value="">請揀</option>
+        <option value="2.5">2.5 小時</option>
+        <option value="2.75">2.75 小時</option>
+        <option value="3">3 小時</option>
+      </select>
+    </label>
+    <button type="submit">計時間</button>
+    <p id="error"></p>
+  </form>
+
+  <div class="output">
+    <p id="next-nap"></p>
+    <p id="ritual-time"></p>
+    <p id="bed-time"></p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form     = document.getElementById('sleep-form');
+      const errEl    = document.getElementById('error');
+      const nextNap  = document.getElementById('next-nap');
+      const ritual   = document.getElementById('ritual-time');
+      const bed      = document.getElementById('bed-time');
+
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        errEl.textContent = '';
+        const wakeVal = document.getElementById('wake-time').value;
+        const windowH = parseFloat(document.getElementById('awake-window').value);
+        console.log('wakeVal:', wakeVal, 'windowH:', windowH);
+        if (!wakeVal || isNaN(windowH)) {
+          errEl.textContent = '❗ 請確認已填寫瞓醒時間，同埋揀咗Awake window';
+          return;
+        }
+
+        const wakeMs   = new Date(wakeVal).getTime();
+        const nextMs   = wakeMs + windowH * 3600 * 1000;
+        const ritualMs = nextMs - 20 * 60 * 1000;
+        const bedMs    = nextMs - 10 * 60 * 1000;
+        const fmt = ms => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        nextNap.textContent  = `預計瞓覺時間：${fmt(nextMs)}`;
+        ritual.textContent   = `• ${fmt(ritualMs)} 開始睡眠儀式（提前20分鐘）`;
+        bed.textContent      = `• ${fmt(bedMs)} 放上床（提前10分鐘）`;
+      });
+    });
+  </script>
+</body>
+</html>
