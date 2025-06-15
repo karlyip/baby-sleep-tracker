@@ -26,9 +26,17 @@
     h1 { text-align: center; color: #01579B; font-weight: 500; margin-bottom: 1rem; }
     label { display: block; margin-top: 1rem; font-weight: 500; }
     input[type="time"] {
-      width: 100%; padding: 0.6rem; margin-top: 0.3rem;
-      border: 1.5px solid #81D4FA; border-radius: 8px;
-      background: #E1F5FE; font-size: 1rem;
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border: 1.5px solid #81D4FA;
+      border-radius: 8px;
+      background: #E1F5FE;
+      font-size: 1rem;
+      text-align: center;
+      text-align-last: center;
+      -moz-text-align-last: center;
+      -webkit-text-align-last: center;
     }
     .awake-group { margin-top: 0.5rem; }
     .awake-group label {
@@ -90,9 +98,8 @@
       timeInput.value = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
       calculate();
       timeInput.addEventListener('change', calculate);
-      document.querySelectorAll('input[name="awake-window"]').forEach(r =>
-        r.addEventListener('change', calculate)
-      );
+      document.querySelectorAll('input[name="awake-window"]')
+        .forEach(r => r.addEventListener('change', calculate));
     });
     function startCountdown(targetMs) {
       clearInterval(countdownInterval);
